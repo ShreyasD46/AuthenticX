@@ -1,5 +1,4 @@
 import ScanForm from "../features/scans/ScanForm";
-import ReportExporter from "../features/reports/ReportExporter";
 import VulnerabilityTable from "../features/scans/VulnerabilityTable";
 import SeverityChart from "../features/scans/SeverityChart";
 import AttackPathGraph from "../features/scans/AttackPathGraph";
@@ -55,16 +54,12 @@ export default function NewScan() {
       <ScanForm onSubmit={handleScan} />
 
       {showResults && (
-        <>
+        <div>
           <h3 className="text-xl font-semibold mt-8 mb-4">Results</h3>
           <VulnerabilityTable data={mockResults} />
           <SeverityChart data={mockResults} />
           <AttackPathGraph data={mockGraph} />
-          <ReportExporter
-            scanResults={mockResults}
-            target="web.examplebank.com"
-          />
-        </>
+        </div>
       )}
     </div>
   );
