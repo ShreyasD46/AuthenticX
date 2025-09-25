@@ -55,7 +55,7 @@ export default function NewScan() {
       <ScanForm onSubmit={handleScan} />
 
       {showResults && (
-        <>
+        <div id="report-section">
           <h3 className="text-xl font-semibold mt-8 mb-4">Results</h3>
           <VulnerabilityTable data={mockResults} />
           <SeverityChart data={mockResults} />
@@ -64,7 +64,7 @@ export default function NewScan() {
             scanResults={mockResults}
             target="web.examplebank.com"
           />
-        </>
+        </div>
       )}
     </div>
   );

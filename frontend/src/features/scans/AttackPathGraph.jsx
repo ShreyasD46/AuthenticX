@@ -152,26 +152,21 @@ export default function AttackPathGraph({ data }) {
     const labelX = node.x + nodeRadius + 4 / globalScale;
     const labelY = node.y;
 
-    // Add background for better readability
-    const textMetrics = ctx.measureText(label);
-    const textWidth = textMetrics.width;
-    const textHeight = fontSize;
-
-    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
-    ctx.fillRect(
-      labelX - 2 / globalScale,
-      labelY - textHeight / 2,
-      textWidth + 4 / globalScale,
-      textHeight
-    );
-
-    // Render label text
-    ctx.fillStyle = "#ffffff";
+    // Render label text with subtle shadow for readability (no box)
+    ctx.save();
+    ctx.shadowColor = "rgba(0,0,0,0.7)";
+    ctx.shadowBlur = 2 / globalScale;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
     ctx.fillText(label, labelX, labelY);
+    ctx.restore();
   };
 
   return (
-    <div className="bg-card p-6 rounded-xl shadow-md border border-gray-700 mt-8 transition-all duration-300 hover:shadow-lg">
+    <div
+      className="bg-card p-6 rounded-xl shadow-md border border-gray-700 mt-8 transition-all duration-300 hover:shadow-lg"
+      data-testid="attack-graph"
+    >
       <h3 className="text-lg font-semibold mb-4 text-white">
         🎯 Attack Path Visualization
       </h3>
