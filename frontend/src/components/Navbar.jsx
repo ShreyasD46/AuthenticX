@@ -6,7 +6,7 @@ export default function Navbar({ onMenuClick }) {
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
 
   return (
-    <nav className="bg-card px-4 py-3 flex justify-between items-center border-b border-gray-800 shadow-sm flex-shrink-0">
+    <nav className="bg-card/80 backdrop-blur-sm px-4 py-3 flex justify-between items-center border-b border-gray-800 shadow-sm flex-shrink-0">
       {/* Left: Hamburger Menu & Title */}
       <div className="flex items-center gap-4">
         <button

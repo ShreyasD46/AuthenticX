@@ -22,11 +22,11 @@ export default function Layout({ children }) {
   }, []);
 
   return (
-    <div className="flex h-screen bg-background text-white overflow-hidden">
+    <div className="flex h-screen bg-transparent text-white overflow-hidden">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex flex-col flex-1 min-w-0">
         <Navbar onMenuClick={handleSidebarToggle} />
-        <main className="flex-1 overflow-auto bg-background p-6">
+        <main className="flex-1 overflow-auto bg-background/30 backdrop-blur-sm p-6">
           {children}
         </main>
       </div>

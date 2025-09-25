@@ -110,7 +110,7 @@ export default function Sidebar({ isOpen, onClose }) {
       {/* Sidebar */}
       <aside
         className={`
-          bg-card h-screen border-r border-gray-800 flex flex-col
+          bg-card/90 backdrop-blur-sm h-screen border-r border-gray-800 flex flex-col
           fixed left-0 top-0 z-50 transform transition-all duration-300 ease-in-out
           md:relative md:translate-x-0 md:z-auto
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
