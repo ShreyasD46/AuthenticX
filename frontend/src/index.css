@@ -16,9 +16,10 @@
   --font-mono: var(--theme-font-mono);
 }
 
-/* Base defaults + dark overrides */
+/* Base theme system using CSS filters for perfect inversion */
 @layer base {
   :root {
+    /* Dark theme as base (your preferred theme) */
     --theme-background: #0f172a; /* Dark navy */
     --theme-card: #1e293b; /* Card panels */
     --theme-accent: #3b82f6; /* Blue highlights */
@@ -33,7 +34,33 @@
       "Roboto Mono", monospace;
   }
 
-  /* Manual dark mode toggle — add `.dark` to <html> or <body> */
+  /* Light theme using CSS invert filter for perfect color flip */
+  .light {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* Invert images, icons, and charts back to normal in light theme */
+  .light img,
+  .light svg,
+  .light video,
+  .light canvas,
+  .light iframe,
+  .light [class*="chart"],
+  .light [class*="Chart"],
+  .light .recharts-wrapper,
+  .light .chartjs-render-monitor {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* Keep sparklines and data visualizations normal */
+  .light .sparkline,
+  .light [aria-label*="sparkline"],
+  .light [aria-label*="chart"],
+  .light [aria-label*="graph"] {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  /* Keep dark theme unchanged */
   .dark {
     --theme-background: #071022; /* Deeper navy */
     --theme-card: #0f172a; /* Darker card */
@@ -56,10 +83,19 @@
 
   body {
     background-color: var(--theme-background);
-    color: white;
     margin: 0;
     padding: 0;
     min-height: 100vh;
+  }
+
+  /* Text colors for light theme */
+  .light body {
+    color: #1f2937; /* Dark gray text for light theme */
+  }
+
+  /* Text colors for dark theme */
+  .dark body {
+    color: white; /* White text for dark theme */
   }
 
   #root {
