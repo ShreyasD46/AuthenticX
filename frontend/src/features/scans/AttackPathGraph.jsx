@@ -3,6 +3,7 @@ import { useRef, useEffect, useState } from "react";
 
 export default function AttackPathGraph({ data }) {
   const fgRef = useRef();
+  const [isExpanded, setIsExpanded] = useState(false);
   const [tooltip, setTooltip] = useState({
     visible: false,
     x: 0,
@@ -164,95 +165,133 @@ export default function AttackPathGraph({ data }) {
 
   return (
     <div
-      className="bg-card p-6 rounded-xl shadow-md border border-gray-700 mt-8 transition-all duration-300 hover:shadow-lg"
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-700 mt-6"
       data-testid="attack-graph"
     >
-      <h3 className="text-lg font-semibold mb-4 text-white">
-        🎯 Attack Path Visualization
-      </h3>
-      <div
-        className="h-96 w-full bg-gray-900 rounded-lg border border-gray-600 relative overflow-hidden"
-        onMouseMove={handleMouseMove}
-      >
-        <ForceGraph2D
-          ref={fgRef}
-          graphData={data}
-          nodeCanvasObject={nodeCanvasObject}
-          linkCanvasObject={linkCanvasObject}
-          nodePointerAreaPaint={(node, color, ctx) => {
-            ctx.fillStyle = color;
-            ctx.beginPath();
-            ctx.arc(node.x, node.y, 12, 0, 2 * Math.PI, false);
-            ctx.fill();
-          }}
-          onNodeHover={handleNodeHover}
-          onNodeClick={handleNodeClick}
-          width={800}
-          height={384}
-          backgroundColor="#111827"
-          enableNodeDrag={false}
-          enableZoomInteraction={true}
-          enablePanInteraction={true}
-          cooldownTicks={100}
-          d3AlphaDecay={0.02}
-          d3VelocityDecay={0.3}
-          minZoom={0.5}
-          maxZoom={4}
-        />
-
-        {/* Legend */}
-        <div className="absolute top-4 right-4 bg-gray-800 p-3 rounded-lg border border-gray-600">
-          <div className="text-xs text-gray-300 mb-2 font-semibold">Legend</div>
-          <div className="space-y-1 text-xs">
-            <div className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: "#60a5fa" }}
-              ></div>
-              <span className="text-gray-300">Entry Point</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: "#93c5fd" }}
-              ></div>
-              <span className="text-gray-300">Assets</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: "#ef4444" }}
-              ></div>
-              <span className="text-gray-300">Vulnerabilities</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: "#94a3b8" }}
-              ></div>
-              <span className="text-gray-300">Default</span>
-            </div>
+      <div className="bg-gray-50 dark:bg-gray-900 rounded-lg m-2">
+        <div
+          className="flex items-center justify-between cursor-pointer px-6 h-12"
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+            Attack Path Visualization
+          </h3>
+          <div
+            className={`transform transition-transform duration-200 ${
+              isExpanded ? "rotate-180" : ""
+            }`}
+          >
+            <svg
+              className="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
           </div>
         </div>
 
-        {/* Tooltip */}
-        {tooltip.visible && tooltip.node && (
+        {/* Collapsible content */}
+        <div
+          className={`transition-all duration-300 ${
+            isExpanded
+              ? "max-h-96 opacity-100 px-6 pt-4 pb-6 overflow-y-auto"
+              : "max-h-0 opacity-0 overflow-hidden"
+          }`}
+        >
           <div
-            className="absolute z-50 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 shadow-lg pointer-events-none"
-            style={{
-              left: tooltip.x,
-              top: tooltip.y,
-              transform: "translate(-50%, -100%)",
-            }}
+            className="h-96 w-full bg-gray-900 rounded-lg border border-gray-600 relative overflow-hidden"
+            onMouseMove={handleMouseMove}
           >
-            <div className="text-sm text-white font-semibold">
-              {tooltip.node.label || tooltip.node.id}
+            <ForceGraph2D
+              ref={fgRef}
+              graphData={data}
+              nodeCanvasObject={nodeCanvasObject}
+              linkCanvasObject={linkCanvasObject}
+              nodePointerAreaPaint={(node, color, ctx) => {
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 12, 0, 2 * Math.PI, false);
+                ctx.fill();
+              }}
+              onNodeHover={handleNodeHover}
+              onNodeClick={handleNodeClick}
+              width={800}
+              height={384}
+              backgroundColor="#111827"
+              enableNodeDrag={false}
+              enableZoomInteraction={true}
+              enablePanInteraction={true}
+              cooldownTicks={100}
+              d3AlphaDecay={0.02}
+              d3VelocityDecay={0.3}
+              minZoom={0.5}
+              maxZoom={4}
+            />
+
+            {/* Legend */}
+            <div className="absolute top-4 right-4 bg-gray-800 p-3 rounded-lg border border-gray-600">
+              <div className="text-xs text-gray-300 mb-2 font-semibold">
+                Legend
+              </div>
+              <div className="space-y-1 text-xs">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: "#60a5fa" }}
+                  ></div>
+                  <span className="text-gray-300">Entry Point</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: "#93c5fd" }}
+                  ></div>
+                  <span className="text-gray-300">Assets</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: "#ef4444" }}
+                  ></div>
+                  <span className="text-gray-300">Vulnerabilities</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: "#94a3b8" }}
+                  ></div>
+                  <span className="text-gray-300">Default</span>
+                </div>
+              </div>
             </div>
-            <div className="text-xs text-gray-300">
-              {getGroupName(tooltip.node.group)}
-            </div>
+
+            {/* Tooltip */}
+            {tooltip.visible && tooltip.node && (
+              <div
+                className="absolute z-50 bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 shadow-lg pointer-events-none"
+                style={{
+                  left: tooltip.x,
+                  top: tooltip.y,
+                  transform: "translate(-50%, -100%)",
+                }}
+              >
+                <div className="text-sm text-white font-semibold">
+                  {tooltip.node.label || tooltip.node.id}
+                </div>
+                <div className="text-xs text-gray-300">
+                  {getGroupName(tooltip.node.group)}
+                </div>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
