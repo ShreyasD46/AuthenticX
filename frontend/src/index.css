@@ -1,1 +1,68 @@
 @import "tailwindcss";
+
+/* Define theme tokens (runtime aware for dark/light mode) */
+@theme inline {
+  /* colors */
+  --color-background: var(--theme-background);
+  --color-card: var(--theme-card);
+  --color-accent: var(--theme-accent);
+  --color-critical: var(--theme-critical);
+  --color-high: var(--theme-high);
+  --color-medium: var(--theme-medium);
+  --color-low: var(--theme-low);
+
+  /* fonts */
+  --font-sans: var(--theme-font-sans);
+  --font-mono: var(--theme-font-mono);
+}
+
+/* Base defaults + dark overrides */
+@layer base {
+  :root {
+    --theme-background: #0f172a; /* Dark navy */
+    --theme-card: #1e293b; /* Card panels */
+    --theme-accent: #3b82f6; /* Blue highlights */
+    --theme-critical: #ef4444; /* Red */
+    --theme-high: #f97316; /* Orange */
+    --theme-medium: #facc15; /* Yellow */
+    --theme-low: #22c55e; /* Green */
+
+    --theme-font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial;
+    --theme-font-mono: "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco,
+      "Roboto Mono", monospace;
+  }
+
+  /* Manual dark mode toggle — add `.dark` to <html> or <body> */
+  .dark {
+    --theme-background: #071022; /* Deeper navy */
+    --theme-card: #0f172a; /* Darker card */
+    --theme-accent: #60a5fa; /* Lighter blue */
+    --theme-critical: #f87171; /* Softer red */
+    --theme-high: #fb923c; /* Softer orange */
+    --theme-medium: #fde047; /* Softer yellow */
+    --theme-low: #4ade80; /* Softer green */
+  }
+
+  html {
+    font-family: var(--theme-font-sans);
+    height: 100%;
+  }
+
+  code,
+  pre {
+    font-family: var(--theme-font-mono);
+  }
+
+  body {
+    background-color: var(--theme-background);
+    color: white;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
