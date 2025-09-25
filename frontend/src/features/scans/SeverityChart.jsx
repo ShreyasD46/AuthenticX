@@ -1,9 +1,13 @@
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { useContext } from "react";
+import ThemeContext from "../../context/ThemeContext";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function SeverityChart({ data }) {
+  const { theme } = useContext(ThemeContext);
+
   // Count severities
   const counts = { Critical: 0, High: 0, Medium: 0, Low: 0 };
   data.forEach((v) => {
@@ -41,7 +45,7 @@ export default function SeverityChart({ data }) {
           pointStyle: "circle",
           boxWidth: 8,
           boxHeight: 8,
-          color: "#e5e7eb", // legend label color (tailwind gray-200)
+          color: theme === "light" ? "#000000" : "#e5e7eb", // black for light theme, light gray for dark theme
         },
       },
       tooltip: {

@@ -434,7 +434,7 @@ export default function Dashboard() {
                   paginatedScans.map((scan, index) => (
                     <div key={scan.id}>
                       <div
-                        className="p-4 hover:bg-gray-800 rounded-lg cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-accent"
+                        className="p-4 hover:bg-gray-600/30 hover:scale-[1.02] rounded-lg cursor-pointer transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent shadow-sm hover:shadow-md"
                         onClick={() => setSelectedScan(scan)}
                         onKeyDown={(e) => handleScanKeyDown(e, scan)}
                         role="button"
