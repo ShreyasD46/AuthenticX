@@ -1,6 +1,6 @@
 export default function Dashboard() {
   return (
-    <div>
+    <div className="h-full overflow-y-auto px-6 py-4 scrollbar-thin">
       <h2 className="text-3xl font-bold text-white mb-4 flex items-center gap-2">
         Welcome Analyst 👋
       </h2>

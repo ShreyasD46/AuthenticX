@@ -49,7 +49,7 @@ export default function NewScan() {
   };
 
   return (
-    <div>
+    <div className="h-full overflow-y-auto px-6 py-4 scrollbar-thin">
       <h2 className="text-2xl font-bold mb-6">🔍 Start a New Scan</h2>
       <ScanForm onSubmit={handleScan} />
 

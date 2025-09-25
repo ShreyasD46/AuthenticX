@@ -3,15 +3,11 @@ import Sidebar from "./Sidebar";
 
 export default function Layout({ children }) {
   return (
-    <div className="flex min-h-screen bg-background text-gray-200">
+    <div className="flex h-screen bg-background text-gray-200 overflow-hidden">
       <Sidebar />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 min-w-0">
         <Navbar />
-        <main className="flex-1 p-8 bg-background">
-          <div className="bg-card rounded-xl p-6 shadow-md border border-gray-800">
-            {children}
-          </div>
-        </main>
+        <main className="flex-1 overflow-hidden bg-background">{children}</main>
       </div>
     </div>
   );
