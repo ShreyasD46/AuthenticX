@@ -22,6 +22,39 @@ export default function Dashboard() {
 
   const summary = { critical: 3, high: 6, medium: 12, low: 7 };
 
+  // Mock scanner status data
+  const scannerStatus = [
+    { name: "Nmap", status: "online" },
+    { name: "Nuclei", status: "online" },
+    { name: "OpenVAS", status: "degraded" },
+  ];
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "online":
+        return "bg-green-500";
+      case "offline":
+        return "bg-red-500";
+      case "degraded":
+        return "bg-yellow-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
+  const getStatusText = (status) => {
+    switch (status) {
+      case "online":
+        return "Online";
+      case "offline":
+        return "Offline";
+      case "degraded":
+        return "Degraded";
+      default:
+        return "Unknown";
+    }
+  };
+
   const mockResults = [
     { Severity: "Critical" },
     { Severity: "Critical" },
@@ -332,9 +365,42 @@ export default function Dashboard() {
   return (
     <div className="h-full overflow-y-auto px-6 py-4 scrollbar-thin">
       <div className="space-y-8">
-        {/* Header with Start New Scan button */}
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">📊 Dashboard Overview</h2>
+        {/* Header with Scanner Status and Start New Scan button */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <h2 className="text-2xl font-bold">📊 Dashboard Overview</h2>
+
+            {/* Scanner Status Widget */}
+            <div className="flex items-center gap-2 bg-card px-3 py-2 rounded-lg border border-gray-700 shadow-sm">
+              <span className="text-sm text-gray-400 font-medium">
+                Scanners:
+              </span>
+              <div className="flex items-center gap-3">
+                {scannerStatus.map((scanner) => (
+                  <div
+                    key={scanner.name}
+                    className="flex items-center gap-1.5 group relative"
+                    title={`${scanner.name}: ${getStatusText(scanner.status)}`}
+                  >
+                    <div
+                      className={`w-2 h-2 rounded-full ${getStatusColor(
+                        scanner.status
+                      )} animate-pulse`}
+                    ></div>
+                    <span className="text-xs text-gray-300 font-medium">
+                      {scanner.name}
+                    </span>
+
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none z-10">
+                      {getStatusText(scanner.status)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <button
             onClick={() => console.log("navigate to /scan")}
             className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg border border-gray-600 hover:border-gray-500 transition-all flex items-center gap-2"
@@ -359,29 +425,113 @@ export default function Dashboard() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-card p-4 rounded-lg shadow-md border border-gray-700">
-            <p className="text-gray-400 text-sm">Critical</p>
-            <p className="text-2xl font-bold text-critical">
-              {summary.critical}
-            </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Critical Severity Card */}
+          <div className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-600 hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-pointer">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-red-900 rounded-lg">
+                <svg
+                  className="w-6 h-6 text-red-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm">Critical</p>
+                <p className="text-2xl font-bold text-red-400">
+                  {summary.critical}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-card p-4 rounded-lg shadow-md border border-gray-700">
-            <p className="text-gray-400 text-sm">High</p>
-            <p className="text-2xl font-bold text-yellow-400">{summary.high}</p>
+          {/* High Severity Card */}
+          <div className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-600 hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-pointer">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-orange-900 rounded-lg">
+                <svg
+                  className="w-6 h-6 text-orange-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm">High</p>
+                <p className="text-2xl font-bold text-orange-400">
+                  {summary.high}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-card p-4 rounded-lg shadow-md border border-gray-700">
-            <p className="text-gray-400 text-sm">Medium</p>
-            <p className="text-2xl font-bold text-yellow-600">
-              {summary.medium}
-            </p>
+          {/* Medium Severity Card */}
+          <div className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-600 hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-pointer">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-yellow-900 rounded-lg">
+                <svg
+                  className="w-6 h-6 text-yellow-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm">Medium</p>
+                <p className="text-2xl font-bold text-yellow-400">
+                  {summary.medium}
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-card p-4 rounded-lg shadow-md border border-gray-700">
-            <p className="text-gray-400 text-sm">Low</p>
-            <p className="text-2xl font-bold text-green-400">{summary.low}</p>
+          {/* Low Severity Card */}
+          <div className="bg-gray-800 p-4 rounded-lg shadow-md border border-gray-600 hover:scale-105 hover:shadow-lg transition-all duration-200 cursor-pointer">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-green-900 rounded-lg">
+                <svg
+                  className="w-6 h-6 text-green-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm">Low</p>
+                <p className="text-2xl font-bold text-green-400">
+                  {summary.low}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -397,20 +547,20 @@ export default function Dashboard() {
           <div className="space-y-4">
             {/* Toolbar */}
             <div className="bg-card p-4 rounded-lg shadow-md border border-gray-700">
-              <div className="flex flex-col sm:flex-row gap-3 items-center">
+              <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
                 <input
                   type="text"
                   placeholder="Search target..."
                   value={searchTarget}
                   onChange={(e) => setSearchTarget(e.target.value)}
                   aria-label="Search scan targets"
-                  className="px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-accent flex-1"
+                  className="px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-accent flex-1 min-w-0 w-full sm:w-auto"
                 />
                 <select
                   value={minSeverity}
                   onChange={(e) => setMinSeverity(e.target.value)}
                   aria-label="Filter by minimum severity level"
-                  className="px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white focus:outline-none focus:border-accent"
+                  className="px-3 py-2 rounded bg-gray-900 border border-gray-600 text-white focus:outline-none focus:border-accent whitespace-nowrap w-full sm:w-auto"
                 >
                   <option value="All">All Severities</option>
                   <option value="Critical">Critical+</option>
@@ -420,7 +570,7 @@ export default function Dashboard() {
                 </select>
                 <button
                   onClick={clearFilters}
-                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
+                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors whitespace-nowrap w-full sm:w-auto"
                 >
                   Clear
                 </button>
@@ -429,7 +579,7 @@ export default function Dashboard() {
 
             <div className="bg-card p-6 rounded-lg shadow-md border border-gray-700">
               <h3 className="text-xl font-semibold mb-4">Recent Scans</h3>
-              <div className="divide-y divide-gray-700">
+              <div className="divide-y divide-gray-700 max-h-96 overflow-y-auto">
                 {paginatedScans.length > 0 ? (
                   paginatedScans.map((scan, index) => (
                     <div key={scan.id}>
