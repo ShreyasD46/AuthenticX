@@ -9,7 +9,7 @@ export default function Sidebar() {
     }`;
 
   return (
-    <aside className="bg-card w-64 min-h-screen p-5 border-r border-gray-800">
+    <aside className="bg-card w-64 h-screen px-4 py-6 border-r border-gray-800 flex flex-col fixed left-0 top-0 z-40 md:relative md:z-auto overflow-y-auto">
       <h2 className="text-accent text-lg font-bold mb-8 tracking-wide">
         AuthenticX
       </h2>
