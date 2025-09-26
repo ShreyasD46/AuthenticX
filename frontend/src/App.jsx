@@ -6,6 +6,7 @@ import NewScan from "./pages/NewScan";
 import Reports from "./pages/Reports";
 import Chatbot from "./pages/Chatbot";
 import Squares from "./components/Squares";
+import ReportDetail from "./pages/ReportDetail";
 
 export default function App() {
   return (
@@ -31,6 +32,8 @@ export default function App() {
                 <Route path="/scan" element={<NewScan />} />
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/chatbot" element={<Chatbot />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/reports/:id" element={<ReportDetail />} />
               </Routes>
             </Layout>
           </Router>

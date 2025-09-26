@@ -23,13 +23,27 @@ export default function AttackPathGraph({ data }) {
   }, []);
 
   const nodeColor = (node) => {
-    const colors = {
-      1: "#60a5fa", // entry: light blue for Internet (entry)
-      2: "#93c5fd", // asset: lighter blue for assets
-      3: "#ef4444", // vuln: red for vulnerabilities
-      4: "#93c5fd", // asset: lighter blue for database/target (also an asset)
+    // Normalize group values (accept numbers or descriptive strings)
+    const normalize = (g) => {
+      if (typeof g === "number") return g;
+      if (!g && g !== 0) return null;
+      const s = String(g).toLowerCase();
+      if (/^\d+$/.test(s)) return parseInt(s, 10);
+      if (s.includes("entry")) return 1;
+      if (s.includes("asset")) return 2;
+      if (s.includes("vuln") || s.includes("cve") || s.includes("vulnerability")) return 3;
+      return null;
     };
-    return colors[node.group] || "#94a3b8"; // default: slate gray
+
+    const g = normalize(node.group);
+    const colors = {
+      1: "#60a5fa", // entry
+      2: "#93c5fd", // asset
+      3: "#ef4444", // vuln
+      4: "#93c5fd", // asset fallback
+    };
+
+    return colors[g] || "#94a3b8"; // default: slate gray
   };
 
   const linkColor = () => "#dc2626"; // Red arrows for attack path
@@ -60,8 +74,7 @@ export default function AttackPathGraph({ data }) {
     ctx.stroke();
 
     // Draw the arrow
-    const arrowLength = 10 / globalScale;
-    const arrowWidth = 6 / globalScale;
+  const arrowLength = 10 / globalScale;
 
     ctx.beginPath();
     ctx.moveTo(endX, endY);
@@ -79,16 +92,33 @@ export default function AttackPathGraph({ data }) {
   };
 
   const getGroupName = (group) => {
+    // Accept numeric or string group identifiers
+    const normalize = (g) => {
+      if (typeof g === "number") return g;
+      if (!g && g !== 0) return null;
+      const s = String(g).toLowerCase();
+      if (/^\d+$/.test(s)) return parseInt(s, 10);
+      if (s.includes("entry")) return 1;
+      if (s.includes("asset")) return 2;
+      if (s.includes("vuln") || s.includes("cve") || s.includes("vulnerability")) return 3;
+      return null;
+    };
+
     const groupNames = {
       1: "Entry Point",
       2: "Asset",
       3: "Vulnerability",
       4: "Asset",
     };
-    return groupNames[group] || "Unknown";
+
+    const g = normalize(group);
+    if (g && groupNames[g]) return groupNames[g];
+    // If provided a descriptive string, capitalize and return that
+    if (typeof group === "string") return group.charAt(0).toUpperCase() + group.slice(1);
+    return "Unknown";
   };
 
-  const handleNodeHover = (node, prevNode) => {
+  const handleNodeHover = (node) => {
     if (node) {
       setTooltip({
         visible: true,

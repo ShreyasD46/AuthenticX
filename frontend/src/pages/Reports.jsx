@@ -1,90 +1,64 @@
 // src/pages/Reports.jsx
 import { useState } from "react";
-import VulnerabilityTable from "../features/scans/VulnerabilityTable";
-import SeverityChart from "../features/scans/SeverityChart";
-import AttackPathGraph from "../features/scans/AttackPathGraph";
-import ReportExporter from "../features/scans/ReportExporter";
+import { useNavigate } from "react-router-dom";
 
 export default function Reports() {
-  // Mock vulnerability scan results (replace later with backend fetch)
-  const [reportData] = useState([
+  const navigate = useNavigate();
+
+  // Mock saved reports
+  const [reports] = useState([
     {
-      CVE_ID: "CVE-2024-12345",
-      CVSS_Score: 9.1,
-      Vulnerability: "SQL Injection in login form",
-      Service: "Apache 2.4.49",
-      Port: 443,
-      Severity: "Critical",
-      Affected_Asset: "web.examplebank.com",
+      id: 1,
+      target: "examplebank.com",
+      date: "2025-09-26",
+      vulnerabilities: 2,
     },
     {
-      CVE_ID: "CVE-2023-56789",
-      CVSS_Score: 6.5,
-      Vulnerability: "Directory Traversal",
-      Service: "Nginx 1.20",
-      Port: 80,
-      Severity: "Medium",
-      Affected_Asset: "api.examplebank.com",
+      id: 2,
+      target: "shopsecure.io",
+      date: "2025-09-20",
+      vulnerabilities: 5,
     },
   ]);
 
-  // Mock graph data
- const mockGraph = {
-  nodes: [
-    { id: "Internet", group: 1 },  // entry
-    { id: "web.examplebank.com", group: 2 }, // asset
-    { id: "SQL Injection", group: 3 },       // vuln
-    { id: "Database", group: 2 },            // asset
-  ],
-  links: [
-    { source: "Internet", target: "web.examplebank.com" },
-    { source: "web.examplebank.com", target: "SQL Injection" },
-    { source: "SQL Injection", target: "Database" },
-  ],
-};
-
-
-  const target = "examplebank.com";
-
   return (
-    <div className="h-full overflow-y-auto px-6 py-4 scrollbar-thin">
-      {/* Page Heading */}
-      <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-2">
-        📄 Reports
-      </h2>
+    <div className="px-6 py-4">
+      <h2 className="text-3xl font-bold text-white mb-6">📄 Reports</h2>
 
-      {/* Full Report Section */}
-      <div id="report-section" className="space-y-8">
-        {/* Summary Card */}
-        <div className="bg-card p-6 rounded-xl shadow-md border border-gray-700">
-          <h3 className="text-xl font-semibold text-accent mb-2">
-            Scan Report for <span className="text-white">{target}</span>
-          </h3>
-          <p className="text-gray-400">
-            Found{" "}
-            <span className="text-critical font-bold">{reportData.length} vulnerabilities</span>{" "}
-            during this scan.
-          </p>
-        </div>
-
-        {/* Vulnerability Table */}
-        <div id="table-section">
-          <VulnerabilityTable data={reportData} />
-        </div>
-
-        {/* Severity Chart */}
-        <div id="chart-section">
-          <SeverityChart data={reportData} />
-        </div>
-
-        {/* Attack Path Graph */}
-        <div id="graph-section">
-          <AttackPathGraph data={mockGraph} />
-        </div>
+      <div className="overflow-hidden rounded-xl border border-gray-700 shadow-md">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-800 text-gray-300 text-sm">
+              <th className="p-3">Target</th>
+              <th className="p-3">Date</th>
+              <th className="p-3">Vulnerabilities</th>
+              <th className="p-3">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {reports.map((r, idx) => (
+              <tr
+                key={r.id}
+                className={`${
+                  idx % 2 === 0 ? "bg-background" : "bg-gray-900"
+                } hover:bg-gray-800 transition`}
+              >
+                <td className="p-3">{r.target}</td>
+                <td className="p-3">{r.date}</td>
+                <td className="p-3">{r.vulnerabilities}</td>
+                <td className="p-3">
+                  <button
+                    className="bg-accent text-white px-3 py-1 rounded hover:bg-blue-500"
+                    onClick={() => navigate(`/reports/${r.id}`)}
+                  >
+                    View Report
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-
-      {/* Export Buttons */}
-      <ReportExporter scanResults={reportData} target={target} graphData={mockGraph} />
     </div>
   );
 }
