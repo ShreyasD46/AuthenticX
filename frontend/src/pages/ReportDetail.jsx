@@ -1,10 +1,47 @@
 // src/pages/ReportDetail.jsx
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import VulnerabilityTable from "../features/scans/VulnerabilityTable";
 import SeverityChart from "../features/scans/SeverityChart";
 import SeverityHeatmap from "../features/scans/SeverityHeatmap";
 import AttackPathGraph from "../features/scans/AttackPathGraph";
 import ReportExporter from "../features/scans/ReportExporter";
+
+// Reusable collapsible section that behaves like the screenshot: a header bar with a chevron
+function CollapsibleSection({ title, children, defaultOpen = false, id }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="space-y-2">
+      <div
+        id={id}
+        role="button"
+        tabIndex={0}
+        onClick={() => setOpen((s) => !s)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setOpen((s) => !s); }}
+        className="w-full flex items-center justify-between bg-[#0b1620] px-6 py-4 rounded-2xl border border-gray-700 cursor-pointer shadow-sm"
+        aria-expanded={open}
+      >
+        <div className="text-lg font-semibold text-white">{title}</div>
+        <svg
+          className={`w-5 h-5 text-gray-300 transform transition-transform ${open ? 'rotate-180' : ''}`}
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M5 7L10 12L15 7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+
+      <div className={`overflow-hidden transition-all ${open ? 'block' : 'hidden'}`}>
+        <div className="mt-3">
+          <div className="bg-card p-4 rounded-xl border border-gray-700">
+            {children}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function ReportDetail() {
   const { id } = useParams();
@@ -104,9 +141,11 @@ export default function ReportDetail() {
           <VulnerabilityTable data={mockResults} />
         </div>
 
-        {/* Severity Chart */}
-        <div id="chart-section">
-          <SeverityChart data={mockResults} />
+        {/* Severity Chart (collapsible) */}
+        <div>
+          <CollapsibleSection id="chart-section-header" title="Severity Distribution">
+            <SeverityChart data={mockResults} />
+          </CollapsibleSection>
         </div>
 
         {/* ✅ Severity Heatmap */}

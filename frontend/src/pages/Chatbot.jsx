@@ -275,6 +275,14 @@ export default function Chatbot() {
           key={`${cveId}-${match.index}`}
           onClick={(e) => {
             e.preventDefault();
+            // If a typing animation is active, finalize it immediately to avoid UI glitches
+            if (typingMessageId) {
+              stopTyping();
+              // mark the typing message as finished so full text renders
+              setMessages((prev) =>
+                prev.map((m) => (m.id === typingMessageId ? { ...m, isTyping: false } : m))
+              );
+            }
             setModalCve(cveId);
           }}
           className="underline hover:text-blue-300 transition-colors cursor-pointer"
@@ -466,16 +474,41 @@ export default function Chatbot() {
   };
 
   const CVEModal = ({ cveId, onClose }) => {
+    const closeBtnRef = useRef(null);
+
+    // Prevent background scroll while modal is open and focus close button
+    useEffect(() => {
+      if (!cveId) return;
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      setTimeout(() => closeBtnRef.current?.focus?.(), 50);
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }, [cveId]);
+
     if (!cveId) return null;
 
+    const handleBackdropClick = () => onClose();
+
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-in fade-in duration-200">
-        <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 border border-gray-700 animate-in fade-in zoom-in-95 duration-200">
+      <div
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate-in fade-in duration-200"
+        onClick={handleBackdropClick}
+      >
+        <div
+          className="bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 border border-gray-700 animate-in fade-in zoom-in-95 duration-200"
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Details for ${cveId}`}
+        >
           <div className="flex justify-between items-start mb-4">
             <h3 className="text-xl font-bold text-white">{cveId}</h3>
             <button
+              ref={closeBtnRef}
               onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors"
+              className="text-gray-400 hover:text-white transition-colors focus:outline-none"
               aria-label="Close modal"
             >
               <svg
@@ -500,7 +533,7 @@ export default function Chatbot() {
 
           <div className="flex gap-3">
             <a
-              href={`https://nvd.nist.gov/vuln/detail/${cveId}`}
+              href={`https://nvd.nist.gov/vuln/detail/${encodeURIComponent(cveId)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
