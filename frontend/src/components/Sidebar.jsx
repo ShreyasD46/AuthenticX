@@ -74,11 +74,11 @@ const ChatbotIcon = () => (
 );
 
 export default function Sidebar({ isOpen, onClose }) {
-  const { theme } = useContext(ThemeContext);
+  useContext(ThemeContext);
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
-    { to: "/", label: "Dashboard", icon: DashboardIcon },
+    { to: "/services", label: "Dashboard", icon: DashboardIcon },
     { to: "/scan", label: "New Scan", icon: ScanIcon },
     { to: "/reports", label: "Reports", icon: ReportsIcon },
     { to: "/chatbot", label: "Chatbot", icon: ChatbotIcon },
@@ -126,7 +126,7 @@ export default function Sidebar({ isOpen, onClose }) {
         >
           {!collapsed && (
             <h2 className="text-blue-400 text-xl font-bold tracking-wide">
-              AuthenticX
+              DigitalX
             </h2>
           )}
 

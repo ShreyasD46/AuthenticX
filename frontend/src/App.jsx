@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import Layout from "./components/Layout";
+import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import NewScan from "./pages/NewScan";
 import Reports from "./pages/Reports";
@@ -26,16 +27,17 @@ export default function App() {
         {/* Main app content */}
         <div className="relative z-10">
           <Router>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/scan" element={<NewScan />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/chatbot" element={<Chatbot />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/reports/:id" element={<ReportDetail />} />
-              </Routes>
-            </Layout>
+            <Routes>
+              {/* Public full-screen landing page */}
+              <Route path="/" element={<Home />} />
+
+              {/* All app pages use the Layout wrapper */}
+              <Route path="/services" element={<Layout><Dashboard /></Layout>} />
+              <Route path="/scan" element={<Layout><NewScan /></Layout>} />
+              <Route path="/reports" element={<Layout><Reports /></Layout>} />
+              <Route path="/chatbot" element={<Layout><Chatbot /></Layout>} />
+              <Route path="/reports/:id" element={<Layout><ReportDetail /></Layout>} />
+            </Routes>
           </Router>
         </div>
       </div>

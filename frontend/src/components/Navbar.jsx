@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar({ onMenuClick }) {
@@ -7,8 +8,8 @@ export default function Navbar({ onMenuClick }) {
 
   return (
     <nav className="bg-card/80 backdrop-blur-sm px-4 py-3 flex justify-between items-center border-b border-gray-800 shadow-sm flex-shrink-0">
-      {/* Left: Hamburger Menu & Title */}
-      <div className="flex items-center gap-4">
+  {/* Left: Hamburger Menu, Title & Home link */}
+  <div className="flex items-center gap-4">
         <button
           onClick={onMenuClick}
           className="md:hidden text-gray-300 hover:text-white p-2 rounded-lg hover:bg-gray-700 transition-colors"
@@ -29,9 +30,9 @@ export default function Navbar({ onMenuClick }) {
           </svg>
         </button>
 
-        <h1 className="text-blue-400 text-xl font-bold tracking-wide hidden sm:block">
-          Security Dashboard
-        </h1>
+        <Link to="/" className="text-blue-400 text-xl font-bold tracking-wide hidden sm:inline-flex items-center gap-2">
+          Go to Home
+        </Link>
       </div>
 
       {/* Right: Search, Theme Toggle, Profile */}
@@ -129,6 +130,8 @@ export default function Navbar({ onMenuClick }) {
           )}
         </div>
       </div>
+
+        
     </nav>
   );
 }
